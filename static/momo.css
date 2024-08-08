@@ -1,0 +1,258 @@
+
+.momo-container {
+    box-sizing: content-box;
+    margin: 10px auto;
+    padding: 10px
+}
+
+.momo-container .momo-main {
+    background: white;
+    border-radius: 5px
+}
+
+.momo-container .momo-footer {
+    background: white;
+    border-radius: 0 0 5px 5px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.momo-container .momo-footer .momo-footer-input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.momo-container .momo-footer .momo-footer-input #momo-input {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.momo-container .momo-footer .momo-footer-send #momo-send {
+    padding: 5px 10px;
+    background-color: #ff899e;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.momo-container .momo-header {
+    border-radius: 8px 8px 0 0;
+    background-image: linear-gradient(#ff899e, #f79bac);
+    height: 30px;
+    padding: 10px
+}
+
+.momo-container .momo-header .momo-header-img {
+    margin-top: 2px;
+    float: left
+}
+
+.momo-container .momo-header .momo-header-cross {
+    float: right;
+    color: white;
+    opacity: 0;
+    line-height: 0;
+    font-size: 60px;
+    font-weight: 100;
+    margin-top: 12px;
+    cursor: pointer
+}
+
+.momo-container .momo-banner {
+    background: #DCE5EC;
+    border-radius: 8px;
+    color: #4C5B70;
+    font-size: 0.9em;
+    text-align: center;
+    display: table;
+    margin: 10px auto;
+    padding: 3px 12px;
+}
+
+.momo-container .momo-msg {
+    border-radius: 8px;
+    color: #FFF;
+    margin: 3px;
+    padding: 5px 10px
+}
+
+.momo-container .momo-msg-student {
+    display: flex
+}
+
+.momo-container .momo-msg-first {
+    position: relative
+}
+
+.momo-container .momo-msg-first::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    transform: rotate(45deg)
+}
+
+.momo-container .momo-msg-student .momo-avatar {
+    width: 50px;
+    min-width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    background: #CCC;
+    margin: 10px;
+    overflow: hidden
+}
+
+.momo-container .momo-msg-student .momo-avatar p {
+    margin: 0
+}
+
+.momo-container .momo-msg-student .momo-msg-main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1
+}
+
+.momo-container .momo-msg-student .momo-msg-main .momo-name {
+    color: #3E444A;
+    font-weight: bold
+}
+
+.momo-container .momo-msg-student .momo-msg-main .momo-msg {
+    background: #4C5B70
+}
+
+.momo-container .momo-msg-student .momo-msg-main .momo-msg-first::after {
+    left: -4px;
+    background: #4C5B70
+}
+
+.momo-container .momo-msg-student .momo-msg-main .momo-msg-img {
+    background: #fff;
+    border-radius: 8px;
+    max-width: 310px
+}
+
+.momo-container .momo-msg-student .momo-msg-main .momo-msg-img img {
+    margin: 3px;
+    border-radius: 8px;
+    max-width: 300px
+}
+
+.momo-container .momo-msg-sensei {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    padding-right: 10px
+}
+
+.momo-container .momo-msg-sensei .momo-msg {
+    background: #4A8ACA
+}
+
+.momo-container .momo-msg-sensei .momo-msg-first::after {
+    right: -4px;
+    background: #4A8ACA
+}
+
+.momo-container .momo-box {
+    border: #CCC 1px solid;
+    border-radius: 8px;
+    margin: 8px 0;
+    padding: 10px
+}
+
+.momo-container .momo-box .momo-title {
+    border-left: 2px solid;
+    color: #4C5B70;
+    line-height: 1rem;
+    padding-left: 5px
+}
+
+.momo-container hr {
+    background: #CCC;
+    margin: 10px 0
+}
+
+.momo-container .momo-box .momo-choose-item {
+    border: #CCC 1px solid;
+    border-radius: 8px;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background ease-in-out .3s
+}
+
+.momo-container .momo-box .momo-choose-item:hover {
+    transition: background ease-in-out .3s
+}
+
+.momo-container .momo-box-reply {
+    background: #E2EDF1
+}
+
+.momo-container .momo-box-reply .momo-choose-item {
+    background: #FEFEFE;
+    color: #4C5B70;
+    padding: 10px 5px
+}
+
+.momo-container .momo-box-reply .momo-choose-item:hover {
+    background: #e2e6ea
+}
+
+.momo-container .momo-box-reply .momo-title {
+    border-color: #369CE1
+}
+
+.momo-container .momo-box-love {
+    background: #FFEDF1
+}
+
+.momo-container .momo-box-love .momo-title {
+    border-color: #FF8EA2
+}
+
+.momo-container .momo-box-love .momo-choose-item {
+    background: #FF8EA2;
+    color: #FFF;
+    padding: 5px
+}
+
+.momo-container .momo-box-love .momo-choose-item:hover {
+    background: #e5687d
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    body {
+        background: #333;
+        color: #FFF
+    }
+
+    .momo-container .momo-main {
+        background: #333
+    }
+
+    .momo-container .momo-footer {
+        background: #333
+    }
+
+    #momo-input {
+        background: #444;
+        color: #FFF
+    }
+
+    .momo-name {
+        color: #FFF!important;
+    }
+
+    #momo-body {
+        scrollbar-color: #444 #333;
+    }
+}

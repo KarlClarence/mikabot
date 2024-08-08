@@ -1,0 +1,37 @@
+<html>
+<head>
+    <title>MomoTalk</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/momo.css">
+    <script src="static/socket.js"></script>
+    <script src="static/moment.min.js"></script>
+    <script src="static/zh-cn.js"></script>
+</head>
+
+<body>
+    <div id="chattable" class="momo-container"
+        style="width: min(600px, 95%);">
+        <div class="momo-main" style="box-shadow: 0 2px 3px #0002;">
+            <div class="momo-header">
+                <div class="momo-header-img"><img alt="MomoTalkLogo.png"
+                        src="static/150px-MomoTalkLogo.webp"
+                        width="150" height="22"
+                        srcset="static/225px-MomoTalkLogo.webp 1.5x, static/300px-MomoTalkLogo.webp 2x"
+                        data-file-width="325" data-file-height="48"></div>
+                <div class="momo-header-cross" tabindex="0">×</div>
+            </div>
+            <div id="momo-body" style="max-height:85vh;overflow-y:scroll"></div>
+            <div class="momo-footer">
+                <div class="momo-footer-input">
+                    <input type="text" id="momo-input" placeholder="Type a message...">
+                </div>
+                <div class="momo-footer-send">
+                    <button id="momo-send">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="static/main.js"></script>
+</html>
