@@ -26,7 +26,7 @@ inputLock = False
 # 配置Azure OpenAI API
 openai.api_key = config["openai"]["api_key"]
 openai.api_base = config["openai"].get("api_url")
-model_name = config["openai"].get("model", "gpt-35-turbo")
+model_name = config["openai"].get("model", "gpt-4o")
 
 client = AzureOpenAI(
   	azure_endpoint = "https://mika-1.openai.azure.com/openai/deployments/mika4/chat/completions?api-
