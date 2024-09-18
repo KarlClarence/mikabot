@@ -65,7 +65,7 @@ def handleMessage(msg):
         messages.append({"role": "user", "content": msg})
 
         # Updated API usage for OpenAI SDK >= 1.0.0
-        stream = client.chat.completions.create(
+        stream = openai.chat.completions.create(
             model= "gpt-4o",
             messages=messages,
             stream=True,
