@@ -28,13 +28,6 @@ openai.api_key = config["openai"]["api_key"]
 openai.api_base = config["openai"].get("api_url")
 model_name = config["openai"].get("model", "gpt-4o")
 
-client = AzureOpenAI(
-  	azure_endpoint = "https://mika-1.openai.azure.com/openai/deployments/mika4/chat/completions?api-
-version=2024-02-15-preview",
-  	api_key="0825bf94904a4801b548b2069d63327a",
-  	api_version="2024-02-15-preview"
-)
-
 def countToken():
     return openai_token_counter(messages=messages, model="gpt-4")
 
