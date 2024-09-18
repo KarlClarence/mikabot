@@ -26,12 +26,11 @@ inputLock = False
 # 配置Azure OpenAI API
 openai.api_key = config["openai"]["api_key"]
 openai.api_base = config["openai"].get("api_url")
-model_name = config["openai"].get("model", "gpt-4o")
 
 client = AzureOpenAI(
-    azure_endpoint = "https://mika-1.openai.azure.com/openai/deployments/mika4/chat/completions?api-version=2024-02-15-preview",
+    azure_endpoint = "https://mika-1.openai.azure.com/openai/deployments/gpt-35-turbo/chat/completions?api-version=2023-03-15-preview",
     api_key="0825bf94904a4801b548b2069d63327a",
-    api_version="2024-02-15-preview"
+    api_version="2023-03-15-preview"
 )
 
 def countToken():
@@ -72,7 +71,7 @@ def handleMessage(msg):
 
         # Updated API usage for OpenAI SDK >= 1.0.0
         stream = client.chat.completions.create(
-            model= "gpt-4o",
+            model= "gpt-3.5-turbo",
             messages=messages,
             stream=True,
             timeout=60
