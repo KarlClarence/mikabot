@@ -82,7 +82,10 @@ def handleMessage(msg):
                     send(i, 1)
                     time.sleep(0.2)
                 last_len = len(l)
-            send(l[-1], 2)
+    if content:  # 确保 content 不为空才执行 send
+        send(l[-1], 2)
+    else:
+        send("No response received from API", 3)
         messages.append({"role": "assistant", "content": content})
     except Exception as e:
         send(f"Error: \\n{traceback.format_exc()}", 3)
