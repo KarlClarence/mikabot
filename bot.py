@@ -82,7 +82,7 @@ def handleMessage(msg):
                     send(i, 1)
                     time.sleep(0.2)
                 last_len = len(l)
-        send(l[-1], 2)
+            send(l[-1], 2)
         messages.append({"role": "assistant", "content": content})
     except Exception as e:
         send(f"Error: \\n{traceback.format_exc()}", 3)
