@@ -72,21 +72,19 @@ def handleMessage(msg):
             timeout=60
         )
 
-        content = ""
-        last_len = 1
-        for chunk in stream:
-            content += chunk.choices[0].delta.content or ""
-            l = content.split("\\")
-            if len(l) > last_len:
-                for i in l[last_len - 1:-1]:
-                    send(i, 1)
-                    time.sleep(0.2)
-                last_len = len(l)
+    content = ""
+    last_len = 1
+    for chunk in stream:
+        content += chunk.choices[0].delta.content or ""
+        l = content.split("\\")
+        if len(l) > last_len:
+            for i in l[last_len - 1:-1]:
+                send(i, 1)
+                time.sleep(0.2)
+            last_len = len(l)
     if content:  # 确保 content 不为空才执行 send
         send(l[-1], 2)
-    else:
-        send("No response received from API", 3)
-        messages.append({"role": "assistant", "content": content})
+    messages.append({"role": "assistant", "content": content})
     except Exception as e:
         send(f"Error: \\n{traceback.format_exc()}", 3)
     print(messages[1:])
