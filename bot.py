@@ -2,13 +2,12 @@ from flask import Flask, request, send_from_directory
 from flask_socketio import SocketIO, emit
 import time
 from datetime import timedelta
-import openai  # 使用openai库，但配置为Azure的API
+import openai
 import traceback
 from openai_token_counter import openai_token_counter
 import configparser
-import time
 import os
-from openai import AzureOpenAI
+
 # 读取配置文件
 config = configparser.ConfigParser()
 config.read("bot.conf")
@@ -23,28 +22,20 @@ messages = original_messages.copy()
 lastMessageTime = 0
 inputLock = False
 
-# 配置Azure OpenAI API
-openai.api_key = config["openai"]["api_key"]
-openai.api_base = config["openai"].get("api_url")
-
-client = AzureOpenAI(
-    azure_endpoint = "https://mika-1.openai.azure.com/openai/deployments/gpt-35-turbo/chat/completions?api-version=2023-03-15-preview",
-    api_key="0825bf94904a4801b548b2069d63327a",
-    api_version="2023-03-15-preview"
+# 配置DeepSeek API
+client = openai.OpenAI(
+    api_key=config["deepseek"]["api_key"],
+    base_url="https://api.deepseek.com/v1"  # 根据实际API地址修改
 )
 
 def countToken():
-    return openai_token_counter(messages=messages, model="gpt-4o")
-
+    return openai_token_counter(messages=messages, model="deepseek-chat")  # 根据实际模型名称修改
 
 def getTimeStr():
     return time.strftime("%Y/%m/%d %a %H:%M:%S", time.localtime())
 
-
-# status: 0:receive, 1:response, 2:end, 3:single
 def send(msg, stat):
     emit('e', {'r': msg, 's': stat})
-
 
 def handleMessage(msg):
     global messages, inputLock, lastMessageTime
@@ -69,9 +60,9 @@ def handleMessage(msg):
         lastMessageTime = time.time()
         messages.append({"role": "user", "content": msg})
 
-        # Updated API usage for OpenAI SDK >= 1.0.0
+        # DeepSeek API调用
         stream = client.chat.completions.create(
-            model= "gpt-3.5-turbo",
+            model="deepseek-chat",  # 替换实际模型名称
             messages=messages,
             stream=True,
             timeout=60
@@ -94,27 +85,22 @@ def handleMessage(msg):
     print(messages[1:])
     inputLock = False
 
-
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
 socketio = SocketIO(app)
 socketio.init_app(app, cors_allowed_origins='*')
 
-
 @app.route('/')
 def index():
     return send_from_directory('', 'index.html')
-
 
 @app.route('/history')
 def history():
     return messages[1:], 200, {'Content-Type': 'application/json'}
 
-
 @socketio.on('connect', namespace='/chat')
 def test_connect():
     print('Client connected')
-
 
 @socketio.on('e', namespace='/chat')
 def handle_message(message):
@@ -123,11 +109,9 @@ def handle_message(message):
     print(message['m'])
     handleMessage(message['m'])
 
-
 @socketio.on('disconnect', namespace='/chat')
 def test_disconnect():
     print('Client disconnected')
-
 
 socketio.run(app, host=config["server"].get("listen", "0.0.0.0"),
              port=config["server"].get("port", "80"), allow_unsafe_werkzeug=True)
