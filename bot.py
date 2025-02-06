@@ -46,15 +46,10 @@ def handleMessage(msg):
     inputLock = True
     print("recv: " + msg)
     if msg == "cls":
-        send("chat history clear.\\nTokens usage: " + str(countToken()), 3)
+        send("chat history clear." , 3)
         messages = original_messages.copy()
         inputLock = False
         lastMessageTime = 0
-        return
-    elif msg == "tokens":
-        send("Tokens usage: " + str(countToken()), 3)
-        inputLock = False
-        return
     try:
         if time.time() - lastMessageTime > 60 * 10:
             messages.append({"role": "system", "content": "下面的对话开始于 " + getTimeStr()})
