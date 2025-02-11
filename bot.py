@@ -7,7 +7,7 @@ import traceback
 from openai_token_counter import openai_token_counter
 import configparser
 import os
-
+import sys
 # 读取配置文件
 config = configparser.ConfigParser()
 config.read("bot.conf")
