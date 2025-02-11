@@ -46,10 +46,10 @@ def handleMessage(msg):
     inputLock = True
     print("recv: " + msg)
     if msg == "cls":
-        send("chat history clear." , 3)
-        messages = original_messages.copy()
-        inputLock = False
-        lastMessageTime = 0
+        send("Restarting Mika...", 3)  # 发送重启提示
+        time.sleep(1)  # 等待 1 秒，确保消息发送到客户端
+        restart_program()  # 调用重启函数
+        return
     try:
         if time.time() - lastMessageTime > 60 * 10:
             messages.append({"role": "system", "content": "下面的对话开始于 " + getTimeStr()})
@@ -84,6 +84,10 @@ def handleMessage(msg):
         send(f"Error: \\n{traceback.format_exc()}", 3)
     print(messages[1:])
     inputLock = False
+
+def restart_program():
+    python = sys.executable  # 获取当前 Python 解释器路径
+    os.execl(python, python, *sys.argv)  # 重启当前程序
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
