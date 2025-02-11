@@ -125,6 +125,9 @@ socket.on('e', function(args) {
         firstMsg = true;
         addStudent(args.r);
         inputLock = false;
+    }else if (args.s == 4) {
+        alert(args.r); // 可选：提示用户页面即将刷新
+        window.location.reload(); // 刷新页面
     }
 });
 
