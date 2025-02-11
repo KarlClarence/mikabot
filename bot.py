@@ -47,7 +47,7 @@ def handleMessage(msg):
     print("recv: " + msg)
     if msg == "cls":
         send("chat history clear.", 3)
-        send("Refresh",4)
+        send("Chat history clear, restarting Mika",4)
         messages = original_messages.copy()
         inputLock = False
         lastMessageTime = 0
