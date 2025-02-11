@@ -46,9 +46,11 @@ def handleMessage(msg):
     inputLock = True
     print("recv: " + msg)
     if msg == "cls":
-        send("Restarting Mika...", 3)  # 发送重启提示
-        time.sleep(1)  # 等待 1 秒，确保消息发送到客户端
-        restart_program()  # 调用重启函数
+        send("chat history clear.", 3)
+        send("Refresh",4)
+        messages = original_messages.copy()
+        inputLock = False
+        lastMessageTime = 0
         return
     try:
         if time.time() - lastMessageTime > 60 * 10:
