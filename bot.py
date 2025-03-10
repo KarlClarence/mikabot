@@ -54,7 +54,7 @@ def handleMessage(msg, session_id):
         }
         # 初始化时，将 original_messages 复制到 messages 中
         user_sessions[session_id]["messages"] = user_sessions[session_id]["original_messages"].copy()
-    
+        send(original_messages[1]["content"], 3)
     user_session = user_sessions[session_id]
     user_session["inputLock"] = True
     print("recv: " + msg)
