@@ -137,7 +137,8 @@ let xhr = new XMLHttpRequest();
 xhr.open('GET', '/history', true);
 xhr.onload = function() {
     let data = JSON.parse(xhr.responseText);
-    addStudent("Sensei欢迎回来！\\我可是个乖乖看家的好孩子哦");
+    addStudent("Sensei欢迎回来！");
+    addStudent("我可是个乖乖看家的好孩子哦");
     for (let i = 0; i < data.length; i++) {
         if (data[i]["role"] == "assistant") {
             var messages = data[i]["content"].split("\\");
