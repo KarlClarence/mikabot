@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, session
 from flask_socketio import SocketIO, emit
 import time
 from datetime import timedelta
@@ -8,6 +8,8 @@ from openai_token_counter import openai_token_counter
 import configparser
 import os
 import sys
+import uuid  # 用于生成唯一会话 ID
+
 # 读取配置文件
 config = configparser.ConfigParser()
 config.read("bot.conf")
@@ -18,9 +20,9 @@ original_messages = [
     {"role": "system", "content": prompt},
     {"role": "assistant", "content": "Sensei欢迎回来！\\我可是个乖乖看家的好孩子哦"}
 ]
-messages = original_messages.copy()
-lastMessageTime = 0
-inputLock = False
+
+# 使用字典存储不同用户的对话历史
+user_sessions = {}
 
 # 配置 DeepSeek API
 api_key = config["openai"]["api_key"]
@@ -31,7 +33,7 @@ client = openai.Client(  # 使用 `Client()` 替代 `OpenAI()`
     base_url=base_url
 )
 
-def countToken():
+def countToken(messages):
     return openai_token_counter(messages=messages, model="deepseek-chat")
 
 def getTimeStr():
@@ -41,37 +43,45 @@ def getTimeStr():
 def send(msg, stat):
     emit('e', {'r': msg, 's': stat})
 
-def handleMessage(msg):
-    global messages, inputLock, lastMessageTime
-    inputLock = True
+def handleMessage(msg, session_id):
+    global user_sessions
+    if session_id not in user_sessions:
+        user_sessions[session_id] = {
+            "messages": original_messages.copy(),
+            "lastMessageTime": 0,
+            "inputLock": False
+        }
+    
+    user_session = user_sessions[session_id]
+    user_session["inputLock"] = True
     print("recv: " + msg)
     if msg == "cls":
         send("chat history clear.", 3)
-        send("Chat history clear, restarting Mika",4)
-        messages = original_messages.copy()
-        inputLock = False
-        lastMessageTime = 0
+        send("Chat history clear.", 4)
+        user_session["messages"] = original_messages.copy()
+        user_session["inputLock"] = False
+        user_session["lastMessageTime"] = 0
         return
     try:
-        if time.time() - lastMessageTime > 60 * 10:
-            messages.append({"role": "system", "content": "下面的对话开始于 " + getTimeStr()})
+        if time.time() - user_session["lastMessageTime"] > 60 * 10:
+            user_session["messages"].append({"role": "system", "content": "下面的对话开始于 " + getTimeStr()})
             send(getTimeStr(), 0)
         else:
             send("", 0)
-        lastMessageTime = time.time()
-        messages.append({"role": "user", "content": msg})
+        user_session["lastMessageTime"] = time.time()
+        user_session["messages"].append({"role": "user", "content": msg})
 
         # 调用 DeepSeek API
         stream = client.chat.completions.create(
             model="deepseek-chat",
-            messages=messages,
+            messages=user_session["messages"],
             stream=True,
             timeout=60
         )
 
         content = ""
         last_len = 1
-        l=[""]
+        l = [""]
         for chunk in stream:
             content += chunk.choices[0].delta.content or ""
             l = content.split("\\")
@@ -81,18 +91,21 @@ def handleMessage(msg):
                     time.sleep(0.2)
                 last_len = len(l)
         send(l[-1], 2)
-        messages.append({"role": "assistant", "content": content})
+        user_session["messages"].append({"role": "assistant", "content": content})
     except Exception as e:
         send(f"Error: \\n{traceback.format_exc()}", 3)
-    print(messages[1:])
-    inputLock = False
+    print(user_session["messages"][1:])
+    user_session["inputLock"] = False
 
-def restart_program():
-    python = sys.executable  # 获取当前 Python 解释器路径
-    os.execl(python, python, *sys.argv)  # 重启当前程序
+def reset_conversation(session_id):
+    global user_sessions
+    if session_id in user_sessions:
+        user_sessions[session_id]["messages"] = original_messages.copy()
+        user_sessions[session_id]["lastMessageTime"] = 0
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
+app.secret_key = 'your_secret_key'  # 设置一个密钥用于 session
 socketio = SocketIO(app)
 socketio.init_app(app, cors_allowed_origins='*')
 
@@ -102,22 +115,36 @@ def index():
 
 @app.route('/history')
 def history():
-    return messages[1:], 200, {'Content-Type': 'application/json'}
+    session_id = session.get('session_id')
+    if session_id in user_sessions:
+        return user_sessions[session_id]["messages"][1:], 200, {'Content-Type': 'application/json'}
+    return [], 200, {'Content-Type': 'application/json'}
 
 @socketio.on('connect', namespace='/chat')
 def test_connect():
-    print('Client connected')
+    session_id = str(uuid.uuid4())  # 生成唯一会话 ID
+    session['session_id'] = session_id
+    user_sessions[session_id] = {
+        "messages": original_messages.copy(),
+        "lastMessageTime": 0,
+        "inputLock": False
+    }
+    print('Client connected with session ID:', session_id)
 
 @socketio.on('e', namespace='/chat')
 def handle_message(message):
-    if inputLock:
+    session_id = session.get('session_id')
+    if session_id not in user_sessions or user_sessions[session_id]["inputLock"]:
         return
     print(message['m'])
-    handleMessage(message['m'])
+    handleMessage(message['m'], session_id)
 
 @socketio.on('disconnect', namespace='/chat')
 def test_disconnect():
-    print('Client disconnected')
+    session_id = session.get('session_id')
+    if session_id in user_sessions:
+        del user_sessions[session_id]
+    print('Client disconnected with session ID:', session_id)
 
 socketio.run(app, host=config["server"].get("listen", "0.0.0.0"),
              port=config["server"].get("port", "80"), allow_unsafe_werkzeug=True)
