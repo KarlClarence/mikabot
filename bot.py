@@ -16,10 +16,6 @@ config.read("bot.conf")
 
 # 读取 prompt 文件内容
 prompt = open(config["bot"].get("prompt_file", "mika.txt"), encoding="utf-8").read()
-original_messages = [
-    {"role": "system", "content": prompt},
-    {"role": "assistant", "content": "Sensei欢迎回来！\\我可是个乖乖看家的好孩子哦"}
-]
 
 # 使用字典存储不同用户的对话历史
 user_sessions = {}
@@ -46,11 +42,18 @@ def send(msg, stat):
 def handleMessage(msg, session_id):
     global user_sessions
     if session_id not in user_sessions:
+        # 每个用户初始化时，创建独立的 original_messages 副本
         user_sessions[session_id] = {
-            "messages": original_messages.copy(),
+            "original_messages": [
+                {"role": "system", "content": prompt},
+                {"role": "assistant", "content": "Sensei欢迎回来！\\我可是个乖乖看家的好孩子哦"}
+            ],
+            "messages": [],  # 当前对话历史
             "lastMessageTime": 0,
             "inputLock": False
         }
+        # 初始化时，将 original_messages 复制到 messages 中
+        user_sessions[session_id]["messages"] = user_sessions[session_id]["original_messages"].copy()
     
     user_session = user_sessions[session_id]
     user_session["inputLock"] = True
@@ -58,7 +61,8 @@ def handleMessage(msg, session_id):
     if msg == "cls":
         send("chat history clear.", 3)
         send("Chat history clear.", 4)
-        user_session["messages"] = original_messages.copy()
+        # 重置时，使用独立的 original_messages 副本
+        user_session["messages"] = user_session["original_messages"].copy()
         user_session["inputLock"] = False
         user_session["lastMessageTime"] = 0
         return
@@ -100,7 +104,8 @@ def handleMessage(msg, session_id):
 def reset_conversation(session_id):
     global user_sessions
     if session_id in user_sessions:
-        user_sessions[session_id]["messages"] = original_messages.copy()
+        # 重置时，使用独立的 original_messages 副本
+        user_sessions[session_id]["messages"] = user_sessions[session_id]["original_messages"].copy()
         user_sessions[session_id]["lastMessageTime"] = 0
 
 app = Flask(__name__)
@@ -124,11 +129,18 @@ def history():
 def test_connect():
     session_id = str(uuid.uuid4())  # 生成唯一会话 ID
     session['session_id'] = session_id
+    # 初始化时，为每个用户创建独立的 original_messages 副本
     user_sessions[session_id] = {
-        "messages": original_messages.copy(),
+        "original_messages": [
+            {"role": "system", "content": prompt},
+            {"role": "assistant", "content": "Sensei欢迎回来！\\我可是个乖乖看家的好孩子哦"}
+        ],
+        "messages": [],  # 当前对话历史
         "lastMessageTime": 0,
         "inputLock": False
     }
+    # 初始化时，将 original_messages 复制到 messages 中
+    user_sessions[session_id]["messages"] = user_sessions[session_id]["original_messages"].copy()
     print('Client connected with session ID:', session_id)
 
 @socketio.on('e', namespace='/chat')
