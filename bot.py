@@ -15,7 +15,7 @@ config = configparser.ConfigParser()
 config.read("bot.conf")
 
 # 读取 prompt 文件内容
-prompt = open(config["bot"].get("prompt_file", "mikalove.txt"), encoding="utf-8").read()
+prompt = open(config["bot"].get("prompt_file", "mika.txt"), encoding="utf-8").read()
 
 # 使用字典存储不同用户的对话历史
 user_sessions = {}
