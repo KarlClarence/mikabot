@@ -15,7 +15,7 @@ config = configparser.ConfigParser()
 config.read("bot.conf")
 
 # 读取 prompt 文件内容
-prompt = open(config["bot"].get("prompt_file", "45.txt"), encoding="utf-8").read()
+prompt = open(config["bot"].get("prompt_file", "mikalove.txt"), encoding="utf-8").read()
 
 # 使用字典存储不同用户的对话历史
 user_sessions = {}
@@ -159,4 +159,5 @@ def test_disconnect():
 
 socketio.run(app, host=config["server"].get("listen", "0.0.0.0"),
              port=config["server"].get("port", "80"), allow_unsafe_werkzeug=True)
+
 
