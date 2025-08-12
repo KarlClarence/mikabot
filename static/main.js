@@ -63,7 +63,7 @@ function addStudent(msg) {
         var newMsgDiv = document.createElement("div");
         newMsgDiv.className = "momo-msg-main";
         newMsgDiv.innerHTML = `
-            <div class="momo-name">未花</div>
+            <div class="momo-name">45</div>
             <div class="momo-msg momo-msg-first" style="width: fit-content;">${msg}</div>
         `;
         newDiv.appendChild(newMsgDiv);
@@ -137,8 +137,8 @@ let xhr = new XMLHttpRequest();
 xhr.open('GET', '/history', true);
 xhr.onload = function() {
     let data = JSON.parse(xhr.responseText);
-    addStudent("Sensei欢迎回来！");
-    addStudent("我可是个乖乖看家的好孩子哦");
+    addStudent("呐，杂鱼终于醒了");
+    addStudent("快来陪我ba");
     for (let i = 0; i < data.length; i++) {
         if (data[i]["role"] == "assistant") {
             var messages = data[i]["content"].split("\\");
