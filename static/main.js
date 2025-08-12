@@ -58,7 +58,7 @@ function addStudent(msg) {
         var newDiv = document.createElement("div");
         newDiv.className = "momo-msg-student";
         newDiv.innerHTML = `
-            <div class="momo-avatar" style="background-image: url(static/head.webp); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
+            <div class="momo-avatar" style="background-image: url(static/45.webp); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
         `;
         var newMsgDiv = document.createElement("div");
         newMsgDiv.className = "momo-msg-main";
@@ -157,3 +157,4 @@ xhr.onload = function() {
     }
 };
 xhr.send();
+
