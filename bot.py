@@ -15,7 +15,7 @@ config = configparser.ConfigParser()
 config.read("bot.conf")
 
 # 读取 prompt 文件内容
-prompt = open(config["bot"].get("prompt_file", "mika.txt"), encoding="utf-8").read()
+prompt = open(config["bot"].get("prompt_file", "45.txt"), encoding="utf-8").read()
 
 # 使用字典存储不同用户的对话历史
 user_sessions = {}
@@ -46,7 +46,7 @@ def handleMessage(msg, session_id):
         user_sessions[session_id] = {
             "original_messages": [
                 {"role": "system", "content": prompt},
-                {"role": "assistant", "content": "Sensei欢迎回来！\\我可是个乖乖看家的好孩子哦"}
+                {"role": "assistant", "content": "呐，杂鱼终于睡醒了\\快来陪我BA"}
             ],
             "messages": [],  # 当前对话历史
             "lastMessageTime": 0,
