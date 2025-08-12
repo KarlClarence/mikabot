@@ -132,7 +132,7 @@ def test_connect():
     user_sessions[session_id] = {
         "original_messages": [
             {"role": "system", "content": prompt},
-            {"role": "assistant", "content": "Sensei欢迎回来！\\我可是个乖乖看家的好孩子哦"}
+            {"role": "assistant", "content": "呐，杂鱼终于睡醒了\\快来陪我BA"}
         ],
         "messages": [],  # 当前对话历史
         "lastMessageTime": 0,
@@ -159,3 +159,4 @@ def test_disconnect():
 
 socketio.run(app, host=config["server"].get("listen", "0.0.0.0"),
              port=config["server"].get("port", "80"), allow_unsafe_werkzeug=True)
+
